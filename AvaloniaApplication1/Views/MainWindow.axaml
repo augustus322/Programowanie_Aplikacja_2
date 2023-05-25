@@ -5,15 +5,40 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="AvaloniaApplication1.Views.MainWindow"
-        Icon="/Assets/avalonia-logo.ico"
-        Title="AvaloniaApplication1">
+        Icon="/Assets/flags/cn.png"
+        Title="Touhou 12.3 Hostlist (konni api)">
 
+	<StackPanel>
+		<Button Width="70" >Refresh</Button>
+
+	
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
              to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+	<!--This binds to the observable collection in the ViewModel-->
+	<ItemsControl Items="{Binding Hosts}">
+		<!--Use a StackPanel to display all the modules-->
+		<ItemsControl.ItemsPanel>
+			<ItemsPanelTemplate>
+				<StackPanel/>
+			</ItemsPanelTemplate>
+		</ItemsControl.ItemsPanel>
 
+		<!--This defines the layout for each item (i.e. each module)-->
+		<ItemsControl.ItemTemplate>
+			<DataTemplate>
+				<StackPanel Orientation="Horizontal" Spacing="5">
+					<TextBlock Text="{Binding host_name} "/>
+					<TextBlock Text="{Binding host_country}"/>
+				</StackPanel>
+				<!--The controls to display each item; bind them to properties on the HardwareModule class-->
+			</DataTemplate>
+			
+		</ItemsControl.ItemTemplate>
+			
+	</ItemsControl>
+</StackPanel>
 </Window>
