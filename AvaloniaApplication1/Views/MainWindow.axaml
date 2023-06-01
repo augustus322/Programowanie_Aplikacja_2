@@ -3,42 +3,58 @@
         xmlns:vm="using:AvaloniaApplication1.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+		
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" MinWidth="766" MinHeight="200"
         x:Class="AvaloniaApplication1.Views.MainWindow"
         Icon="/Assets/flags/cn.png"
         Title="Touhou 12.3 Hostlist (konni api)">
-
+		
 	<StackPanel>
-		<Button Width="70" >Refresh</Button>
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="40"></RowDefinition>
+				<RowDefinition Height="*"></RowDefinition>
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto"></ColumnDefinition>
+				<ColumnDefinition Width="Auto"></ColumnDefinition>
+				<ColumnDefinition Width="0.3*"></ColumnDefinition>
+				<ColumnDefinition Width="*"></ColumnDefinition>
+			</Grid.ColumnDefinitions>
+				<Button Margin="3" Grid.Row="0" Grid.Column="0" Width="70" Command="{Binding OnClickCommand}">Refresh</Button>
+				<CheckBox Margin="3" Grid.Row="0" Grid.Column="1" IsChecked="{Binding OnlyJoinable}"> Only Joinable</CheckBox>
+				<Canvas ZIndex="1" Margin="3" Grid.Row="0" Grid.Column="2" Width="{Binding ActualWidth, ElementName=Expander}">	
+					<Expander>
+						<Expander.Header>
+							<Label Content="Country filter"></Label>
+						</Expander.Header>
+						<StackPanel Orientation="Horizontal">
+							<ListBox Items="{Binding CountryFilterList}" SelectionMode="Multiple,Toggle" SelectedItems="{Binding SelectedCountries}">
+							<ListBox.ItemTemplate>
+								<DataTemplate>
+									<StackPanel Orientation="Horizontal" Spacing="5">
+										<TextBlock Text="{Binding CountryCode}"/>
+										<Image Source="{Binding	CountryIcon}"/>
+									</StackPanel>
+								</DataTemplate>
+							</ListBox.ItemTemplate>
+							</ListBox>
+						</StackPanel>
+					</Expander>
+				</Canvas>
+				<TextBox Margin="3" Grid.Row="0" Grid.Column="3" Watermark="Host message" Text="{Binding HostMessage}"/>
 
-	
-    <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:MainWindowViewModel/>
-    </Design.DataContext>
-
-	<!--This binds to the observable collection in the ViewModel-->
-	<ItemsControl Items="{Binding Hosts}">
-		<!--Use a StackPanel to display all the modules-->
-		<ItemsControl.ItemsPanel>
-			<ItemsPanelTemplate>
-				<StackPanel/>
-			</ItemsPanelTemplate>
-		</ItemsControl.ItemsPanel>
-
-		<!--This defines the layout for each item (i.e. each module)-->
-		<ItemsControl.ItemTemplate>
-			<DataTemplate>
-				<StackPanel Orientation="Horizontal" Spacing="5">
-					<TextBlock Text="{Binding host_name} "/>
-					<TextBlock Text="{Binding host_country}"/>
-				</StackPanel>
-				<!--The controls to display each item; bind them to properties on the HardwareModule class-->
-			</DataTemplate>
-			
-		</ItemsControl.ItemTemplate>
-			
-	</ItemsControl>
-</StackPanel>
+		<DataGrid Opacity="1" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Height="500" Name="MyDataGrid" VerticalGridLinesBrush="Azure" BorderThickness="1" IsReadOnly="True" Items="{Binding Hosts}" AutoGenerateColumns="False" >
+			<DataGrid.Columns>
+				<DataGridTextColumn Header="IP" Binding="{Binding ip}" MinWidth="130"/>
+				<DataGridTextColumn Header="Autopunch"  Binding="{Binding autopunch}"/>
+				<DataGridTextColumn Header="Host Name" Binding="{Binding host_name}"/>
+				<DataGridTextColumn Header="Host Country" Binding="{Binding host_country}"/>
+				<DataGridTextColumn Header="Client Name"  Binding="{Binding client_name}"/>
+				<DataGridTextColumn Header="Client Country"  Binding="{Binding client_country}"/>
+				<DataGridTextColumn Header="Host Message"  Binding="{Binding message}"/>
+			</DataGrid.Columns>
+		</DataGrid>
+		</Grid>
+	</StackPanel>
 </Window>
